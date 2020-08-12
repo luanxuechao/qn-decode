@@ -53,6 +53,8 @@ func decode(args []string) error {
 		util.DecodeQmcFlac(filename)
 	case "qmc0", "qmc3":
 		util.DecodeQmc0OrQmc3(filename)
+	case "ncm":
+		util.Dump(filename)
 	default:
 		return errors.New("The file not support")
 	}
