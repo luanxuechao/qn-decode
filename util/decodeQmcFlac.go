@@ -30,6 +30,7 @@ type QmcFlac2MP3Inf struct {
 func DecodeQmcFlac(filename string) error {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
+		fmt.Printf(err.Error())
 		return errors.New(err.Error())
 	}
 	var buffer []byte = data
@@ -55,6 +56,7 @@ func DecodeQmcFlac(filename string) error {
 	if err2 != nil {
 		fmt.Printf(err2.Error())
 	}
+	fmt.Printf("qmc111")
 	return nil
 }
 

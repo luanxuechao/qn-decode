@@ -28,6 +28,7 @@ var maps []int = []int{0x77, 0x48, 0x32, 0x73, 0xDE, 0xF2, 0xC0, 0xC8, 0x95, 0xE
 func DecodeQmc0OrQmc3(filename string) error {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
+		fmt.Printf(err.Error())
 		return errors.New(err.Error())
 	}
 	var buffer []byte = data

@@ -271,7 +271,9 @@ func isFlac(fp *os.File) (bool, error) {
 // Dump  info
 func Dump(filename string) ([]byte, error) {
 	fp, err := os.Open(filename)
+	fmt.Printf(filename)
 	if err != nil {
+		fmt.Printf(err.Error())
 		return nil, errors.New("The file not support")
 	}
 	if result, err := NCMFile(fp); !result || err != nil {
@@ -317,7 +319,6 @@ func Dump(filename string) ([]byte, error) {
 	} else {
 		newFile = filename[0:strIndex] + ".mp3"
 	}
-	fmt.Print(111)
 	err2 := ioutil.WriteFile(newFile, writer.Bytes(), 0666)
 	if err2 != nil {
 		fmt.Printf(err2.Error())
