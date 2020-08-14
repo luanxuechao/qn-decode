@@ -41,6 +41,7 @@ func DecodeQmc0OrQmc3(filename string) error {
 	}
 	newFile := filename[0:strIndex] + ".mp3"
 	err2 := ioutil.WriteFile(newFile, buffer, 0666)
+	fmt.Println(newFile)
 	if err2 != nil {
 		fmt.Printf(err2.Error())
 	}

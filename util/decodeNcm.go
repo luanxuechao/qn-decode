@@ -318,6 +318,7 @@ func Dump(filename string) ([]byte, error) {
 		newFile = filename[0:strIndex] + ".mp3"
 	}
 	err2 := ioutil.WriteFile(newFile, writer.Bytes(), 0666)
+	fmt.Println(newFile)
 	if err2 != nil {
 		fmt.Printf(err2.Error())
 	}
