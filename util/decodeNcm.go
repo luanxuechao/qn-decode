@@ -271,7 +271,6 @@ func isFlac(fp *os.File) (bool, error) {
 // Dump  info
 func Dump(filename string) ([]byte, error) {
 	fp, err := os.Open(filename)
-	fmt.Printf(filename)
 	if err != nil {
 		fmt.Printf(err.Error())
 		return nil, errors.New("The file not support")
@@ -290,7 +289,6 @@ func Dump(filename string) ([]byte, error) {
 	}
 
 	box := buildKeyBox(deKeyData)
-	fmt.Print(111)
 	n := 0x8000
 	var writer bytes.Buffer
 

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -50,16 +49,15 @@ var decodeCmd = &cobra.Command{
 func decodeFile(fileName string) error {
 	var strIndex int = strings.LastIndex(fileName, ".")
 	var fileFormat = fileName[strIndex+1 : len(fileName)]
-	fmt.Println(fileName)
 	switch fileFormat {
 	case "qmcflac":
-		util.DecodeQmcFlac(filename)
+		util.DecodeQmcFlac(fileName)
 		break
 	case "qmc0", "qmc3":
-		util.DecodeQmc0OrQmc3(filename)
+		util.DecodeQmc0OrQmc3(fileName)
 		break
 	case "ncm":
-		util.Dump(filename)
+		util.Dump(fileName)
 		break
 	default:
 		return errors.New("The file not support")
@@ -89,8 +87,6 @@ func decodeDir() error {
 		if fileFormat != "qmcflac" && fileFormat != "qmc0" && fileFormat != "qmc3" && fileFormat != "ncm" {
 			continue
 		}
-		fmt.Println(len(dirname + "/" + fi.Name()))
-		fmt.Println(len("/Users/xuechaoluan/Downloads/OurSong.ncm"))
 		filenameList = append(filenameList, dirname+"/"+fi.Name())
 	}
 

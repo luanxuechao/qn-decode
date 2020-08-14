@@ -51,12 +51,10 @@ func DecodeQmcFlac(filename string) error {
 		return errors.New("file not expected")
 	}
 	newFile := filename[0:strIndex] + ".mp3"
-	fmt.Println(newFile)
 	err2 := ioutil.WriteFile(newFile, buffer, 0666)
 	if err2 != nil {
 		fmt.Printf(err2.Error())
 	}
-	fmt.Printf("qmc111")
 	return nil
 }
 
