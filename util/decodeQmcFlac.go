@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strings"
+
+	"github.com/nu11ptr/cmpb"
 )
 
 var seedMap [8][7]int = [8][7]int{
@@ -27,8 +29,8 @@ type QmcFlac2MP3Inf struct {
 }
 
 // DecodeQmcFlac  qmcflac to mp3
-func DecodeQmcFlac(filename string) error {
-	data, err := ioutil.ReadFile(filename)
+func DecodeQmcFlac(filePath string, fileName string, p *cmpb.Progress) error {
+	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		fmt.Printf(err.Error())
 		return errors.New(err.Error())
@@ -38,19 +40,22 @@ func DecodeQmcFlac(filename string) error {
 	y := 8
 	dx := 1
 	index := -1
+	b := p.NewBar(fileName, len(data))
+	b.SetMessage("tranfering...")
 	for i := 0; i < len(data); i++ {
 		result := qmcFlac2MP3(x, y, dx, index)
 		buffer[i] = byte(result.Ret) ^ buffer[i]
+		b.Increment()
 		x = result.X
 		y = result.Y
 		dx = result.Dx
 		index = result.Index
 	}
-	strIndex := strings.LastIndex(filename, ".")
+	strIndex := strings.LastIndex(filePath, ".")
 	if strIndex == -1 {
 		return errors.New("file not expected")
 	}
-	newFile := filename[0:strIndex] + ".mp3"
+	newFile := filePath[0:strIndex] + ".mp3"
 	err2 := ioutil.WriteFile(newFile, buffer, 0666)
 	fmt.Println(newFile)
 	if err2 != nil {

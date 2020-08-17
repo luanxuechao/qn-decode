@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strings"
+
+	"github.com/nu11ptr/cmpb"
 )
 
 var maps []int = []int{0x77, 0x48, 0x32, 0x73, 0xDE, 0xF2, 0xC0, 0xC8, 0x95, 0xEC, 0x30, 0xB2, 0x51, 0xC3, 0xE1, 0xA0,
@@ -25,21 +27,24 @@ var maps []int = []int{0x77, 0x48, 0x32, 0x73, 0xDE, 0xF2, 0xC0, 0xC8, 0x95, 0xE
 	0x79, 0x4A, 0x11}
 
 // DecodeQmc0OrQmc3 is  a decode qmc and qmc3 to mp3 adapter
-func DecodeQmc0OrQmc3(filename string) error {
-	data, err := ioutil.ReadFile(filename)
+func DecodeQmc0OrQmc3(filePath string, fileName string, p *cmpb.Progress) error {
+	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		fmt.Printf(err.Error())
 		return errors.New(err.Error())
 	}
 	var buffer []byte = data
+	b := p.NewBar(fileName, len(data))
+	b.SetMessage("tranfering...")
 	for i := 0; i < len(data); i++ {
 		buffer[i] = buffer[i] ^ byte(mapL(i))
+		b.Increment()
 	}
-	strIndex := strings.LastIndex(filename, ".")
+	strIndex := strings.LastIndex(filePath, ".")
 	if strIndex == -1 {
 		return errors.New("file not expected")
 	}
-	newFile := filename[0:strIndex] + ".mp3"
+	newFile := filePath[0:strIndex] + ".mp3"
 	err2 := ioutil.WriteFile(newFile, buffer, 0666)
 	fmt.Println(newFile)
 	if err2 != nil {

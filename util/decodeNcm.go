@@ -13,6 +13,8 @@ import (
 	"math"
 	"os"
 	"strings"
+
+	"github.com/nu11ptr/cmpb"
 )
 
 // Album model
@@ -269,8 +271,8 @@ func isFlac(fp *os.File) (bool, error) {
 }
 
 // Dump  info
-func Dump(filename string) ([]byte, error) {
-	fp, err := os.Open(filename)
+func Dump(filePath string, fileName string, p *cmpb.Progress) ([]byte, error) {
+	fp, err := os.Open(filePath)
 	if err != nil {
 		fmt.Printf(err.Error())
 		return nil, errors.New("The file not support")
@@ -291,21 +293,22 @@ func Dump(filename string) ([]byte, error) {
 	box := buildKeyBox(deKeyData)
 	n := 0x8000
 	var writer bytes.Buffer
-
+	b := p.NewBar(fileName, n)
+	b.SetMessage("tranfering...")
 	var tb = make([]byte, n)
 	for {
 		if _, err := fp.Read(tb); err != nil {
 			break // read EOF
 		}
-
 		for i := 0; i < n; i++ {
 			j := byte((i + 1) & 0xff)
 			tb[i] ^= box[(box[j]+box[(box[j]+j)&0xff])&0xff]
+			b.Increment()
 		}
 
 		writer.Write(tb) // write to memory
 	}
-	strIndex := strings.LastIndex(filename, ".")
+	strIndex := strings.LastIndex(filePath, ".")
 
 	if strIndex == -1 {
 		return nil, errors.New("file not expected")
@@ -313,9 +316,9 @@ func Dump(filename string) ([]byte, error) {
 	isFlacFormat, err := isFlac(fp)
 	newFile := ""
 	if isFlacFormat {
-		newFile = filename[0:strIndex] + ".flac"
+		newFile = filePath[0:strIndex] + ".flac"
 	} else {
-		newFile = filename[0:strIndex] + ".mp3"
+		newFile = filePath[0:strIndex] + ".mp3"
 	}
 	err2 := ioutil.WriteFile(newFile, writer.Bytes(), 0666)
 	fmt.Println(newFile)
